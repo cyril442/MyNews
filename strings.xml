@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">My News</string>
+    <string name="search_articles_title">Search Articles</string>
+    <string name="notifications_toolbar">Notifications</string>
+    <string name="help_toolbar">help</string>
+    <string name="about_toolbar">About</string>
+</resources>
