@@ -10,7 +10,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar_search_activity)
         setSupportActionBar(toolbar)
         supportActionBar!!. setDisplayHomeAsUpEnabled(true)
     }
