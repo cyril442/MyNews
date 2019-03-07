@@ -34,8 +34,10 @@
                 android:layout_height="wrap_content"
                 app:tabTextColor="@color/white"
                 android:background="@color/colorPrimary"
-                android:id="@+id/customTabLayout"
-        >
+                android:id="@+id/customTabLayout">
+
+
+
 
         </com.google.android.material.tabs.TabLayout>
     </androidx.viewpager.widget.ViewPager>

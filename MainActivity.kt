@@ -11,7 +11,6 @@ import androidx.viewpager.widget.ViewPager
 import com.example.mynews.Fragments.Tab1Fragment
 import com.example.mynews.Fragments.Tab2Fragment
 import com.example.mynews.Fragments.Tab3Fragment
-import com.example.mynews.Fragments.Tab4Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,13 +24,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-        // 6) settiong Up of the page Adapter in the Oncreate
+        // 6) setting Up of the page Adapter in the Oncreate
 
         pagerAdapter = CustompagerAdapter(supportFragmentManager)
         pagerAdapter!!.addFragments(Tab1Fragment(), "Fragment 1")
         pagerAdapter!!.addFragments(Tab2Fragment(), "Fragment 2")
         pagerAdapter!!.addFragments(Tab3Fragment(), "Fragment 3")
-        pagerAdapter!!.addFragments(Tab4Fragment(), "Fragment 4")
+
 
         //7) Adding pagerAdapter to viewpager
         customViewPager.adapter = pagerAdapter
