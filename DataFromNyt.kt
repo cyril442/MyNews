@@ -5,6 +5,7 @@ data class DataFromNyt (
         val section : String,
         val subsection : String,
         val date : String,
+        val urlArticle : String,
         val iconUrl : String,
-        val urlArticle : String
+        val caption : String
 )

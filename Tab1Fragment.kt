@@ -8,7 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.mynews.App
+import com.example.mynews.ItemNewsAdapter
 import com.example.mynews.NewYorkTimesApi.NytWrapper
 import com.example.mynews.NewYorkTimesApi.mapNytDataToDataFromNyt
 
@@ -21,12 +24,14 @@ import retrofit2.Response
 
 class Tab1Fragment : Fragment() {
 
+
     private val TAG = Tab1Fragment::class.java.simpleName
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tab1, container, false)
     }
@@ -39,6 +44,11 @@ class Tab1Fragment : Fragment() {
             override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
 
                 Log.i(TAG, "NYT response : ${response.body()}")
+                response?.body()?.let {
+                    val dataFromNyt = mapNytDataToDataFromNyt(it)
+
+                    Log.i(TAG, "DataFromNyt response : $dataFromNyt")
+                }
 
             }
             override fun onFailure(call: Call<NytWrapper>, t: Throwable) {

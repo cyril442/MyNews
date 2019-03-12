@@ -34,12 +34,16 @@
                 android:layout_height="wrap_content"
                 app:tabTextColor="@color/white"
                 android:background="@color/colorPrimary"
-                android:id="@+id/customTabLayout">
+                android:id="@+id/customTabLayout"/>
 
 
-
-
-        </com.google.android.material.tabs.TabLayout>
+        <fragment
+                android:id="@+id/fragment_tab1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.example.mynews.Fragments.Tab1Fragment"
+                class="com.example.mynews.Fragments.Tab1Fragment"
+        />
     </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

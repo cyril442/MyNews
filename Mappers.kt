@@ -4,7 +4,8 @@ import com.example.mynews.Fragments.DataFromNyt
 
 fun mapNytDataToDataFromNyt (nytWrapper: NytWrapper) : DataFromNyt {
     val dataFromNytFirst = nytWrapper.results.first()
-    val dataFromNytSecond = nytWrapper.multimedia.first()
+    val dataFromNytSecond = nytWrapper.results.first().multimedia.first()
+
 
 
     return DataFromNyt(
@@ -13,7 +14,9 @@ fun mapNytDataToDataFromNyt (nytWrapper: NytWrapper) : DataFromNyt {
         subsection = dataFromNytFirst.subsection,
         date = dataFromNytFirst.date,
         urlArticle = dataFromNytFirst.urlArticle,
-        iconUrl = dataFromNytSecond.iconUrl
+        iconUrl = dataFromNytSecond.iconUrl,
+        caption = dataFromNytSecond.caption
+
     )
 
 }

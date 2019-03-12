@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".Fragments.Tab1Fragment">
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        tools:context=".Fragments.Tab1Fragment"
+        android:id="@+id/container">
 
 
-    <TextView
-            android:text="Tab 1 Fragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" tools:layout_editor_absoluteY="355dp"
-            tools:layout_editor_absoluteX="176dp" android:id="@+id/textView"
-            />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+   <androidx.recyclerview.widget.RecyclerView
+
+           android:id="@+id/top_stories_recycler_view"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           tools:listitem="@layout/item_news"
+           android:name="com.example.mynews.Fragments.Tab1Fragment"
+           class="com.example.mynews.Fragments.Tab1Fragment"
+   >
+
+
+</androidx.recyclerview.widget.RecyclerView>
+
+
+
+</FrameLayout>
