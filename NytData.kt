@@ -15,6 +15,7 @@ data class ResultsData (
     @SerializedName ("multimedia") val multimedia : ArrayList<Multimedia>
 )
 
+
 data class Multimedia (
     @SerializedName("url") val iconUrl : String,
     val caption : String

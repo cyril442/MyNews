@@ -3,8 +3,8 @@ package com.example.mynews.NewYorkTimesApi
 import com.example.mynews.Fragments.DataFromNyt
 
 fun mapNytDataToDataFromNyt (nytWrapper: NytWrapper) : DataFromNyt {
-    val dataFromNytFirst = nytWrapper.results.first()
-    val dataFromNytSecond = nytWrapper.results.first().multimedia.first()
+    val dataFromNytFirst : ResultsData = nytWrapper.results.first()
+     val dataFromNytSecond : Multimedia = nytWrapper.results.first().multimedia.first()
 
 
 

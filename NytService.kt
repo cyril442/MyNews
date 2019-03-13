@@ -11,6 +11,6 @@ private const val API_KEY = "92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW"
 
 interface NytService {
 
-    @GET("svc/topstories/v2/home.json?api-key=92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW")
+    @GET("svc/topstories/v2/sports.json?api-key=92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW")
     fun getNytDataTopStories() : Call<NytWrapper>
 }

@@ -44,7 +44,7 @@ class Tab1Fragment : Fragment() {
             override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
 
                 Log.i(TAG, "NYT response : ${response.body()}")
-                response?.body()?.let {
+                response.body()?.let {
                     val dataFromNyt = mapNytDataToDataFromNyt(it)
 
                     Log.i(TAG, "DataFromNyt response : $dataFromNyt")

@@ -115,6 +115,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         if( view.tag != null){
             Log.i("MainActivityClick", "Click sur un élément de la liste")
+            val intent = Intent(this, SearchActivity::class.java)
+            startActivity(intent)
+
+
 
         }
     }
