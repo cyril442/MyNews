@@ -16,6 +16,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:titleTextColor="#FFFFFF">
 
+
+
     </androidx.appcompat.widget.Toolbar>
 
     <!--<include layout="@layout/appbar_main"-->
@@ -37,13 +39,18 @@
                 android:id="@+id/customTabLayout"/>
 
 
+
         <fragment
-                android:id="@+id/fragment_tab1"
+                android:id="@+id/fragment1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:name="com.example.mynews.Fragments.Tab1Fragment"
-                class="com.example.mynews.Fragments.Tab1Fragment"
-        />
+                android:layout_height="match_parent"
+                class="com.example.mynews.Fragments.Tab1Fragment">
+
+
+        </fragment>
+                <!--android:name="com.example.mynews.Fragments.Tab1Fragment"-->
+
+
     </androidx.viewpager.widget.ViewPager>
 
 </LinearLayout>

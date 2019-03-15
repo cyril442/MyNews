@@ -30,6 +30,7 @@ class WebviewActivity : AppCompatActivity() {
         val settings = webView.settings
         settings.javaScriptEnabled = true
 
+
         webView.loadUrl("https//developer.android.com")
     }
 

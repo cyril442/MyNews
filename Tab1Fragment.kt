@@ -16,41 +16,56 @@ import com.example.mynews.NewYorkTimesApi.NytWrapper
 import com.example.mynews.NewYorkTimesApi.mapNytDataToDataFromNyt
 
 import com.example.mynews.R
+
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.fragment_tab1.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 
+class Tab1Fragment : Fragment(), View.OnClickListener {
 
-class Tab1Fragment : Fragment() {
+
+    companion object {
+        fun newInstance(): Tab1Fragment {
+            return Tab1Fragment()
+        }
+    }
+
+    //9) to Bind the Adapter to the RecyclerView and Main Activity
+    lateinit var datasFromNyt: MutableList<DataFromNyt>
+    //11) Set the adapter
+    lateinit var newsAdapter: ItemNewsAdapter
+
+    lateinit var recyclerView: RecyclerView
 
 
     private val TAG = Tab1Fragment::class.java.simpleName
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tab1, container, false)
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val call = App.nytService.getNytDataTopStories()
-        call.enqueue(object : Callback<NytWrapper>{
+        call.enqueue(object : Callback<NytWrapper> {
+
+            //WAIT TO GET RESPONSE OR FAILURE
+
 
             override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
 
-                Log.i(TAG, "NYT response : ${response.body()}")
+                //  Log.i(TAG, "NYT response : ${response.body()}")
                 response.body()?.let {
-                    val dataFromNyt = mapNytDataToDataFromNyt(it)
 
+                    val dataFromNyt = mapNytDataToDataFromNyt(it)
                     Log.i(TAG, "DataFromNyt response : $dataFromNyt")
+
+
                 }
 
             }
+
             override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
                 Log.e(TAG, "Nyt response : Could not load ! ", t)
                 Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
@@ -58,7 +73,74 @@ class Tab1Fragment : Fragment() {
 
 
         })
+
+
+
+        //10) Initialize the DatasfromNyt into the onCreate
+
+        datasFromNyt = mutableListOf<DataFromNyt>()
+//        // ICI deux test en local:
+        datasFromNyt.add(DataFromNyt("Il est libre Max!", "Monde ", " > France", "28 juin 2019", "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html", "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg", "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."))
+        datasFromNyt.add(DataFromNyt("C'est sur", "europe", "Serbie", "12 mars 2019", "https://www.nytimes.com/2019/03/06/business/bank-regulation.html", "https://static01.nyt.com/images/2019/03/07/business/06dc-crisis1/06dc-crisis1-thumbStandard.jpg", "The Federal Reserve said that it would no longer give banks a passing or failing grade on a portion of the annual stress tests used to ensure a bank had sufficient resources to lend during an economic downturn."))
+        datasFromNyt.add(DataFromNyt("Il est CANAILLOUX!", "France ", " > Bearn", "28 juin 2019", "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html", "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg", "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."))
+
+
+//        //12) Initialize newsAdapter onto the onCreate
+        newsAdapter = ItemNewsAdapter(datasFromNyt, this)
+
+//        //14) Collect the Recycler View from the Layout
+
+        //       this.recyclerView = (R.id.top_stories_recycler_view) as RecyclerView
+//        recyclerView.layoutManager = LinearLayoutManager(activity)
+//        // recyclerView.setHasFixedSize(true)
+//        recyclerView.adapter = newsAdapter
+
+
+        super.onCreate(savedInstanceState)
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_tab1, container, false)
+
+        recyclerView = view.findViewById(R.id.top_stories_recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.setHasFixedSize(false)
+        recyclerView.adapter = newsAdapter
+
+        // Inflate the layout for this fragment
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
+//        val call = App.nytService.getNytDataTopStories()
+//        call.enqueue(object : Callback<NytWrapper>{
+//
+//            override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
+//
+//                Log.i(TAG, "NYT response : ${response.body()}")
+//                response.body()?.let {
+//                    val dataFromNyt = mapNytDataToDataFromNyt(it)
+//
+//                    Log.i(TAG, "DataFromNyt response : $dataFromNyt")
+//                }
+//
+//            }
+//            override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
+//                Log.e(TAG, "Nyt response : Could not load ! ", t)
+//                Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
+//            }
+//
+//
+//        })
+    }
+
+    override fun onClick(view: View) {
+        Toast.makeText(activity, "clické sur item + {${tag}}", Toast.LENGTH_SHORT).show()
+    }
 
 }

@@ -21,13 +21,15 @@ import com.example.mynews.Fragments.Tab2Fragment
 import com.example.mynews.Fragments.Tab3Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity()
+  //  , View.OnClickListener
+{
 
 
-        //9) to Bind the Adapter to the RecyclerView and Main Activity
-        lateinit var datasFromNyt : MutableList<DataFromNyt>
-        //11) Set the adapter
-        lateinit var newsAdapter : ItemNewsAdapter
+//        //9) to Bind the Adapter to the RecyclerView and Main Activity
+//        lateinit var datasFromNyt : MutableList<DataFromNyt>
+//        //11) Set the adapter
+//        lateinit var newsAdapter : ItemNewsAdapter
 
         // 5) Setting Up of the value pager Adapter
     var pagerAdapter : CustompagerAdapter? = null
@@ -40,21 +42,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 
 
-//        //10) Initialize the DatasfromNyt into the onCreate
-        datasFromNyt = mutableListOf<DataFromNyt>()
-        // ICI deux test en local:
-        datasFromNyt.add(DataFromNyt("Il est libre Max!", "Monde", "France", "28 juin 2019", "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html", "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg", "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."))
-        datasFromNyt.add(DataFromNyt("C'est sur", "europe", "Serbie", "12 mars 2019", "https://www.nytimes.com/2019/03/06/business/bank-regulation.html", "https://static01.nyt.com/images/2019/03/07/business/06dc-crisis1/06dc-crisis1-thumbStandard.jpg", "The Federal Reserve said that it would no longer give banks a passing or failing grade on a portion of the annual stress tests used to ensure a bank had sufficient resources to lend during an economic downturn."))
-
-//        //12) Initialize newsAdapter onto the onCreate
-        newsAdapter = ItemNewsAdapter(datasFromNyt, this)
-
-//        //14) Collect the Recycler View from the Layout
-        val recyclerView = findViewById<RecyclerView>(R.id.top_stories_recycler_view)
-            recyclerView.layoutManager = LinearLayoutManager(this)
-           // recyclerView.setHasFixedSize(true)
-            recyclerView.adapter = newsAdapter
-
+//
+////        //10) Initialize the DatasfromNyt into the onCreate
+//        datasFromNyt = mutableListOf<DataFromNyt>()
+//        // ICI deux test en local:
+//        datasFromNyt.add(DataFromNyt("Il est libre Max!", "Monde", "France", "28 juin 2019", "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html", "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg", "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."))
+//        datasFromNyt.add(DataFromNyt("C'est sur", "europe", "Serbie", "12 mars 2019", "https://www.nytimes.com/2019/03/06/business/bank-regulation.html", "https://static01.nyt.com/images/2019/03/07/business/06dc-crisis1/06dc-crisis1-thumbStandard.jpg", "The Federal Reserve said that it would no longer give banks a passing or failing grade on a portion of the annual stress tests used to ensure a bank had sufficient resources to lend during an economic downturn."))
+//
+////        //12) Initialize newsAdapter onto the onCreate
+//        newsAdapter = ItemNewsAdapter(datasFromNyt, this)
+//
+////        //14) Collect the Recycler View from the Layout
+//        val recyclerView = findViewById<RecyclerView>(R.id.top_stories_recycler_view)
+//            recyclerView.layoutManager = LinearLayoutManager(this)
+//           // recyclerView.setHasFixedSize(true)
+//            recyclerView.adapter = newsAdapter
+//
 
 
         // 6) setting Up of the page Adapter in the Oncreate
@@ -79,6 +82,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+
     //2) Creation of the Menu associated to the toolbar when onCreate Activity
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_main, menu)
@@ -96,6 +100,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.action_notification -> {
                 Toast.makeText(this, "Notification Button Clicked", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, NotificationActivity::class.java)
+                startActivity(intent)
                 return true
             }
             R.id.action_about -> {
@@ -111,15 +117,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
-    // 13) Implementation of the OnClick on the item
-    override fun onClick(view: View) {
-        if( view.tag != null){
-            Log.i("MainActivityClick", "Click sur un élément de la liste")
-            val intent = Intent(this, SearchActivity::class.java)
-            startActivity(intent)
-
-
-
-        }
-    }
+//    // 13) Implementation of the OnClick on the item
+//    override fun onClick(view: View) {
+//        if( view.tag != null){
+//            Log.i("MainActivityClick", "Click sur un élément de la liste")
+//            val intent = Intent(this, SearchActivity::class.java)
+//            startActivity(intent)
+//
+//
+//
+//        }
+//    }
 }

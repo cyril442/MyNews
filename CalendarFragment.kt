@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.example.mynews.R
 import kotlinx.android.synthetic.main.fragment_calendar.*
@@ -46,7 +47,8 @@ class CalendarFragment : Fragment() {
         date_begin_picker_button.setOnClickListener{
             val datebegin = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, mYear, mMonth, mDay ->
                 // set to TextView
-                selected_date.setText("" + mDay + "/" + mMonth + "/" + mYear)
+                selected_date.setText("" + mDay + "/" + (mMonth+1) +  "/" + mYear)
+                Toast.makeText(activity, """$mDay - ${mMonth + 1} - $mYear""", Toast.LENGTH_SHORT).show()
             }, year, month, day)
             //show dialog
             datebegin.show()
@@ -56,7 +58,8 @@ class CalendarFragment : Fragment() {
         date_end_picker_button.setOnClickListener{
             val dateEnd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, mYear, mMonth, mDay ->
                 // set to TextView
-                selected_end_date.setText("" + mDay + "/" + mMonth + "/" + mYear)
+                selected_end_date.setText("" + mDay + "/" + (mMonth+1) + "/" + mYear)
+                Toast.makeText(activity, """$mDay - ${mMonth + 1} - $mYear""", Toast.LENGTH_SHORT).show()
             }, year, month, day)
             //show dialog
             dateEnd.show()
