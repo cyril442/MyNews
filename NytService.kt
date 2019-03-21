@@ -14,3 +14,10 @@ interface NytService {
     @GET("svc/topstories/v2/sports.json?api-key=92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW")
     fun getNytDataTopStories() : Call<NytWrapper>
 }
+
+interface NytServiceSearch{
+
+    @GET("svc/search/v2/articlesearch.json?q=business&api-key=92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW")
+    fun getNytDataFromSearch() : Call<NytWrapperSearch>
+
+}

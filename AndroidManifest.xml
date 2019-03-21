@@ -14,6 +14,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+
         <activity android:name=".Webview.WebviewActivity">
         </activity>
         <activity
@@ -24,13 +25,19 @@
                     android:value=".MainActivity"/>
         </activity>
         <activity
+                android:name=".ResultSearchActivity"
+                android:parentActivityName=".SearchActivity">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".SearchActivity"/>
+        </activity>
+        <activity
                 android:name=".NotificationActivity"
                 android:parentActivityName=".MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".MainActivity"/>
         </activity>
-
         <activity
                 android:name=".MainActivity"
                 android:screenOrientation="userPortrait">

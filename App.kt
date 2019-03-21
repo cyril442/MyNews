@@ -2,6 +2,7 @@ package com.example.mynews
 
 import android.app.Application
 import com.example.mynews.NewYorkTimesApi.NytService
+import com.example.mynews.NewYorkTimesApi.NytServiceSearch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -24,6 +25,7 @@ class App : Application() {
             .build()
 
         val nytService : NytService = retrofit.create(NytService::class.java)
+        val nytServiceSearch : NytServiceSearch = retrofit.create(NytServiceSearch::class.java)
     }
 
 
