@@ -20,6 +20,9 @@ import com.example.mynews.Fragments.Tab1Fragment
 import com.example.mynews.Fragments.Tab2Fragment
 import com.example.mynews.Fragments.Tab3Fragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity()
   //  , View.OnClickListener

@@ -15,15 +15,24 @@ import com.example.mynews.ItemNewsAdapter
 import com.example.mynews.NewYorkTimesApi.Multimedia
 import com.example.mynews.NewYorkTimesApi.NytWrapper
 import com.example.mynews.NewYorkTimesApi.mapNytDataToDataFromNyt
+import com.example.mynews.NewYorkTimesApi.mapNytDataToDataFromNytSearch
 
 import com.example.mynews.R
 import com.google.gson.GsonBuilder
 
 import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.fragment_tab1.*
+import kotlinx.android.synthetic.main.item_news.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import kotlin.concurrent.thread
+import kotlin.properties.ObservableProperty
 
 
 class Tab1Fragment : Fragment(), View.OnClickListener {
@@ -43,6 +52,8 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
     lateinit var recyclerView: RecyclerView
 
 
+
+
     private val TAG = Tab1Fragment::class.java.simpleName
 
 
@@ -50,36 +61,6 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-
-        val call = App.nytService.getNytDataTopStories()
-        call.enqueue(object : Callback<NytWrapper> {
-
-
-            //HOW TO WAIT TO GET RESPONSE OR FAILURE?
-
-
-            override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
-
-                //  Log.i(TAG, "NYT response : ${response.body()}")
-                response.body()?.let {
-
-                    val dataFromNyt = mapNytDataToDataFromNyt(it)
-                    Log.i(TAG, "DataFromNyt response : $dataFromNyt")
-
-
-                }
-
-
-
-
-            }
-
-            override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
-                Log.e(TAG, "Nyt response : Could not load ! ", t)
-                Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
-            }
-
-        })
 
 
 
@@ -92,45 +73,68 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_tab1, container, false)
+        val view = inflater.inflate(com.example.mynews.R.layout.fragment_tab1, container, false)
 
-        //10) Initialize the DatasfromNyt into the onCreateView
-        datasFromNyt = mutableListOf<DataFromNyt>()
-//        // ICI trois test en local:
-        datasFromNyt.add(
-            DataFromNyt(
-                "Il est libre Max!",
-                "Monde ",
-                " > France",
-                "28 juin 2019",
-                "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html",
-                "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg",
-                "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."
-            )
-        )
-        datasFromNyt.add(
-            DataFromNyt(
-                "C'est sur",
-                "europe",
-                "brexit",
-                "12 mars 2019",
-                "https://www.nytimes.com/2019/03/06/business/bank-regulation.html",
-                "https://static01.nyt.com/images/2019/03/07/business/06dc-crisis1/06dc-crisis1-thumbStandard.jpg",
-                "The Federal Reserve said that it would no longer give banks a passing or failing grade on a portion of the annual stress tests used to ensure a bank had sufficient resources to lend during an economic downturn."
-            )
-        )
-        datasFromNyt.add(
-            DataFromNyt(
-                "Il est CANAILLOUX!",
-                "France ",
-                " > Bearn",
-                "28 juin 2019",
-                "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html",
-                "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg",
-                "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."
-            )
 
-        )
+
+        Log.i("chatouille", "Start Entered in createdView")
+        if (datasFromNyt.isNullOrEmpty()){
+            datasFromNyt = workload()
+            Thread.sleep(2000)
+
+        }
+
+
+
+          //Thread.sleep(2000)
+       // datasFromNyt  = workload()
+        Log.i("chatouille","Stop")
+
+
+
+
+
+    //10) Initialize the DatasfromNyt into the onCreateView
+     //   datasFromNyt = mutableListOf<DataFromNyt>()
+
+
+
+
+////        // ICI trois test en local:
+//            datasFromNyt.add(
+//                DataFromNyt(
+//                    "Il est libre Max!",
+//                    "Monde ",
+//                    " > France",
+//                    "28 juin 2019",
+//                    "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html",
+//                    "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg",
+//                    "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."
+//                )
+//            )
+//            datasFromNyt.add(
+//                DataFromNyt(
+//                    "C'est sur",
+//                    "europe",
+//                    "brexit",
+//                    "12 mars 2019",
+//                    "https://www.nytimes.com/2019/03/06/business/bank-regulation.html",
+//                    "https://static01.nyt.com/images/2019/03/07/business/06dc-crisis1/06dc-crisis1-thumbStandard.jpg",
+//                    "The Federal Reserve said that it would no longer give banks a passing or failing grade on a portion of the annual stress tests used to ensure a bank had sufficient resources to lend during an economic downturn."
+//                )
+//            )
+//            datasFromNyt.add(
+//                DataFromNyt(
+//                    "Il est CANAILLOUX!",
+//                    "France ",
+//                    " > Bearn",
+//                    "28 juin 2019",
+//                    "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html",
+//                    "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg",
+//                    "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."
+//                )
+//
+//            )
 
 
 
@@ -140,10 +144,13 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
 
 
         //14) Collect the Recycler View from the Layout
-        recyclerView = view.findViewById(R.id.top_stories_recycler_view)
+        recyclerView = view.findViewById(com.example.mynews.R.id.top_stories_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.setHasFixedSize(false)
         recyclerView.adapter = newsAdapter
+
+
+
 
         // Inflate the layout for this fragment
         return view
@@ -153,10 +160,113 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
 
 
 
+
     }
+
+
+
+
 
     override fun onClick(view: View) {
         Toast.makeText(activity, "clické sur item + {${tag}}", Toast.LENGTH_SHORT).show()
     }
 
-}
+    private fun workload(): MutableList<DataFromNyt> {
+
+
+
+
+        val call = App.nytService.getNytDataTopStories()
+        GlobalScope.async {
+        call.enqueue(object : Callback<NytWrapper> {
+
+
+            //HOW TO WAIT TO GET RESPONSE OR FAILURE?
+
+
+
+
+
+
+
+            override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
+
+                //  Log.i(TAG, "NYT response : ${response.body()}")
+                response.body()?.let {
+
+                    val dataFromNyt = mapNytDataToDataFromNyt(it)
+                    Log.i(TAG, "DataFromNyt response : $dataFromNyt")
+
+                    datasFromNyt = mutableListOf(dataFromNyt)
+                    Log.i(TAG, "DatasFromNytFromCoroutine : $datasFromNyt")
+
+
+
+                }
+
+
+            }
+
+            override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
+                Log.e(TAG, "Nyt response : Could not load ! ", t)
+                Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
+            }
+
+
+        })
+
+
+
+
+        }
+        return datasFromNyt
+    }
+
+//    fun getNews() : ObservableProperty<List<DataFromNyt>> {
+//        return Observable.create {
+//                subscriber ->
+//
+//
+//            val call = App.nytService.getNytDataTopStories()
+//            call.enqueue(object : Callback<NytWrapper> {
+//
+//
+//                //HOW TO WAIT TO GET RESPONSE OR FAILURE?
+//
+//
+//                override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
+//
+//                    //  Log.i(TAG, "NYT response : ${response.body()}")
+//                    response.body()?.let {
+//
+//                        val dataFromNyt = mapNytDataToDataFromNyt(it)
+//                        Log.i(TAG, "DataFromNyt response : $dataFromNyt")
+//
+//                        datasFromNyt = mutableListOf(dataFromNyt)
+//                        Log.i(TAG, "DatasFromNytFromCoroutine : $datasFromNyt")
+//
+//                        subscriber.onNext(datasFromNyt)
+//
+//
+//                    }
+//
+//
+//                }
+//
+//                override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
+//                    Log.e(TAG, "Nyt response : Could not load ! ", t)
+//                    Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
+//                    subscriber.onError()
+//                }
+//
+//
+//            })
+//
+//        }
+
+    }
+
+
+
+
+
