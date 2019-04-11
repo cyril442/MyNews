@@ -31,7 +31,7 @@ data class NytWrapperSearch (val docs : ArrayList<Docs>,
   data class Docs (
 
       @SerializedName("section_name") val section : String,
-      @SerializedName("subsectoinName") val subsection: String,
+      @SerializedName("subsectionName") val subsection: String,
       @SerializedName("snippet") val title : String,
       @SerializedName("web_url") val urlArticle : String,
       @SerializedName("multimedia") val images: ArrayList<Images>?,

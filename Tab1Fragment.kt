@@ -1,6 +1,7 @@
 package com.example.mynews.Fragments
 
 
+import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -37,6 +38,8 @@ import kotlin.properties.ObservableProperty
 
 class Tab1Fragment : Fragment(), View.OnClickListener {
 
+    var jsonURL = "https://api.nytimes.com/svc/topstories/v2/science.json?api-key=92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW"
+
 
     companion object {
         fun newInstance(): Tab1Fragment {
@@ -45,11 +48,11 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
     }
 
     //9) to Bind the Adapter to the RecyclerView and Main Activity
-    lateinit var datasFromNyt: MutableList<DataFromNyt>
+  //  lateinit var datasFromNyt: MutableList<DataFromNyt>
     //11) Set the adapter
-    lateinit var newsAdapter: ItemNewsAdapter
+   // lateinit var newsAdapter: ItemNewsAdapter
 
-    lateinit var recyclerView: RecyclerView
+     lateinit var recyclerView: RecyclerView
 
 
 
@@ -57,15 +60,6 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
     private val TAG = Tab1Fragment::class.java.simpleName
 
 
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-
-
-
-
-        super.onCreate(savedInstanceState)
-    }
 
 
 
@@ -76,26 +70,30 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
         val view = inflater.inflate(com.example.mynews.R.layout.fragment_tab1, container, false)
 
 
+     //  recyclerView = getView() as RecyclerView
+        recyclerView = view.findViewById(R.id.top_stories_recycler_view) as RecyclerView
 
-        Log.i("chatouille", "Start Entered in createdView")
-        if (datasFromNyt.isNullOrEmpty()){
-            datasFromNyt = workload()
-            Thread.sleep(2000)
+ //       JSONDownloader(context!!, jsonURL, recyclerView).execute()
 
-        }
+//        Log.i("chatouille", "Start Entered in createdView")
+//        if (datasFromNyt.isNullOrEmpty()){
+//                datasFromNyt = workload()
+        //    Thread.sleep(2000)
+
+//        }
 
 
 
           //Thread.sleep(2000)
        // datasFromNyt  = workload()
-        Log.i("chatouille","Stop")
+ //       Log.i("chatouille","Stop")
 
 
 
 
 
     //10) Initialize the DatasfromNyt into the onCreateView
-     //   datasFromNyt = mutableListOf<DataFromNyt>()
+  //      datasFromNyt = mutableListOf<DataFromNyt>()
 
 
 
@@ -139,15 +137,17 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
 
 
 
+
+
 //        //12) Initialize newsAdapter into the onCreate
-        newsAdapter = ItemNewsAdapter(datasFromNyt, this)
+//        newsAdapter = ItemNewsAdapter(datasFromNyt, this)
 
 
         //14) Collect the Recycler View from the Layout
-        recyclerView = view.findViewById(com.example.mynews.R.id.top_stories_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        recyclerView.setHasFixedSize(false)
-        recyclerView.adapter = newsAdapter
+//        recyclerView = view.findViewById(com.example.mynews.R.id.top_stories_recycler_view)
+//        recyclerView.layoutManager = LinearLayoutManager(activity)
+//        recyclerView.setHasFixedSize(false)
+//        recyclerView.adapter = newsAdapter
 
 
 
@@ -170,57 +170,57 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View) {
         Toast.makeText(activity, "clické sur item + {${tag}}", Toast.LENGTH_SHORT).show()
     }
-
-    private fun workload(): MutableList<DataFromNyt> {
-
-
-
-
-        val call = App.nytService.getNytDataTopStories()
-        GlobalScope.async {
-        call.enqueue(object : Callback<NytWrapper> {
-
-
-            //HOW TO WAIT TO GET RESPONSE OR FAILURE?
-
-
-
-
-
-
-
-            override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
-
-                //  Log.i(TAG, "NYT response : ${response.body()}")
-                response.body()?.let {
-
-                    val dataFromNyt = mapNytDataToDataFromNyt(it)
-                    Log.i(TAG, "DataFromNyt response : $dataFromNyt")
-
-                    datasFromNyt = mutableListOf(dataFromNyt)
-                    Log.i(TAG, "DatasFromNytFromCoroutine : $datasFromNyt")
-
-
-
-                }
-
-
-            }
-
-            override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
-                Log.e(TAG, "Nyt response : Could not load ! ", t)
-                Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
-            }
-
-
-        })
-
-
-
-
-        }
-        return datasFromNyt
-    }
+//
+//    private fun workload(): MutableList<DataFromNyt> {
+//
+//
+//
+//
+//        val call = App.nytService.getNytDataTopStories()
+//
+//        call.enqueue(object : Callback<NytWrapper> {
+//
+//
+//            //HOW TO WAIT TO GET RESPONSE OR FAILURE?
+//
+//
+//
+//
+//
+//
+//
+//            override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
+//
+//                //  Log.i(TAG, "NYT response : ${response.body()}")
+//                response.body()?.let {
+//
+//                    val dataFromNyt = mapNytDataToDataFromNyt(it)
+//                    Log.i(TAG, "DataFromNyt response : $dataFromNyt")
+//
+//                    datasFromNyt = mutableListOf(dataFromNyt)
+//                    Log.i(TAG, "DatasFromNytFromCoroutine : $datasFromNyt")
+//
+//
+//
+//                }
+//
+//
+//            }
+//
+//            override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
+//                Log.e(TAG, "Nyt response : Could not load ! ", t)
+//                Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
+//            }
+//
+//
+//        })
+//
+//
+//
+//
+//
+//        return datasFromNyt
+//    }
 
 //    fun getNews() : ObservableProperty<List<DataFromNyt>> {
 //        return Observable.create {

@@ -1,26 +1,50 @@
 package com.example.mynews
 
+import android.annotation.TargetApi
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
+import android.content.ComponentName
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.SwitchPreference
+import android.util.Log
 import android.view.View
-import android.widget.Button
+import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Switch
 import android.widget.Toast
-import androidx.appcompat.widget.SwitchCompat
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.mynews.Fragments_Notification.JobSchedulerFragment
-import kotlinx.android.synthetic.main.activity_notification.*
+import kotlinx.android.synthetic.main.activity_search.*
+import kotlinx.android.synthetic.main.fragment_check_box.*
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
-class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.OnCheckedChangeListener, JobSchedulerFragment.onJobSchedulerFragmentSelected {
+
+class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.OnCheckedChangeListener,
+    JobSchedulerFragment.onJobSchedulerFragmentSelected {
+
+    internal lateinit var btnSwitch: Switch
+    val JOB_ID = 123
+    val TAG = "Notification Activity"
+
+    lateinit var artsNot : String
+    lateinit var politicsNot : String
+    lateinit var businessNot : String
+    lateinit var sportsNot : String
+    lateinit var entrepreneursNot : String
+    lateinit var travelNot : String
+
     override fun onClick(v: View?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(this, "onClick has been clicked", Toast.LENGTH_SHORT).show()
     }
 
     override fun onCheckedChanged(group: RadioGroup?, checkedId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(this, "onCheckChanged", Toast.LENGTH_SHORT).show()
     }
 
 
@@ -33,8 +57,128 @@ class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGro
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
+        btnSwitch = findViewById(R.id.btnSwitch)
+
+        btnSwitch.setOnClickListener {
+
+            if (btnSwitch.isChecked) {
+                Toast.makeText(this, "Switch Button is checked", Toast.LENGTH_SHORT).show()
+                collectDatasForNotifications()
+                scheduleJob()
+                //
+            } else {
+                Toast.makeText(this, "Switch Button is Unchecked", Toast.LENGTH_SHORT).show()
+                cancelJob()
+                //
+            }
+
+        }
+
+
     }
+
+
+
     override fun onJobSchedulerFragmentSelected(jobSchedulerFragment: JobSchedulerFragment) {
         Toast.makeText(this, "Hey, you selected !", Toast.LENGTH_SHORT).show()
+    }
+
+    fun scheduleJob() {
+        val componentName = ComponentName(this, ExampleJobService::class.java)
+        val info = JobInfo.Builder(JOB_ID, componentName)
+            //   .setRequiresCharging(true)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+            .setPersisted(true)
+            .setPeriodic(15 * 60 * 1000)
+            .build()
+
+        val scheduler = getSystemService(JOB_SCHEDULER_SERVICE) as JobScheduler
+        val resultCode = scheduler.schedule(info)
+        if (resultCode == JobScheduler.RESULT_SUCCESS) {
+            Log.d(TAG, "Job scheduled")
+        } else {
+            Log.d(TAG, "Job scheduling failed")
+        }
+    }
+
+
+    fun cancelJob() {
+        val scheduler = getSystemService(AppCompatActivity.JOB_SCHEDULER_SERVICE) as JobScheduler
+        scheduler.cancel(JOB_ID)
+        Log.d(TAG, "Job cancelled")
+    }
+
+
+    private fun collectDatasForNotifications() {
+
+        val key : String = "92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW"
+
+        var editText = findViewById<EditText>(R.id.edit_query)
+
+        var queryNotification = editText.text
+        var artNotification = checkBoxArts.isChecked
+        var politicsNotification = checkBoxPolitics.isChecked
+        var businessNotification = checkBoxBusiness.isChecked
+        var sportNotification = checkBoxSport.isChecked
+        var entrepreneursNotification = checkBoxEntrepreneurs.isChecked
+        var travelNotification = checkBoxTravel.isChecked
+
+        Toast.makeText(this, " editText : $queryNotification, $artNotification, $politicsNotification, $businessNotification, $sportNotification, $entrepreneursNotification, $travelNotification", Toast.LENGTH_LONG).show()
+
+
+        when (artNotification) {
+            true -> artsNot = "&fq=Arts"
+            false -> artsNot = "" }
+
+        when(politicsNotification) {
+            true -> politicsNot = "&fq=Politics"
+            false -> politicsNot = ""}
+
+        when (businessNotification) {
+            true -> businessNot = "&fq=Business"
+            false -> businessNot = "" }
+
+        when (sportNotification) {
+            true -> sportsNot = "&fq=Sports"
+            false -> sportsNot = "" }
+
+        when (entrepreneursNotification) {
+            true -> entrepreneursNot = "&fq=Entrepreneurs"
+            false -> entrepreneursNot = "" }
+
+        when (travelNotification) {
+            true -> travelNot = "&fq=Travel"
+            false -> travelNot = "" }
+
+//        var currentDate = Date(System.currentTimeMillis()).toString()
+//        var formatter = SimpleDateFormat("yyyy-MM-dd")
+//        var formattedDateBegin = formatter.format(currentDate)
+
+        // DATE BEGIN AND ENDING
+        var calendar = Calendar.getInstance()
+        var input = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime())
+
+        var sdfIn = SimpleDateFormat("dd/MM/yyyy")
+        var sdfOut = SimpleDateFormat("yyyyMMdd")
+
+        var date = sdfIn.parse(input)
+        var dateBeginNotification = sdfOut.format(date)
+
+     //   var parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+      //  var formatter = SimpleDateFormat("yyyyMMdd")
+       // var output = formatter.format(parser.parse(currentDateFormated))
+
+//        var today = LocalDateTime.now()
+//        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
+//        val formattedDateBegin = today.format(formatter)
+
+        val fq = "$artsNot$politicsNot$businessNot$sportsNot$entrepreneursNot$travelNot".trim()
+
+        var jsonForNotification = "https://api.nytimes.com/svc/search/v2/articlesearch.json?begin_date=$dateBeginNotification&end_date=20190410&facet_fields=news_desk&facet_filter=true$fq&q=$queryNotification&sort=relevance&api-key=$key"
+
+        Log.d(TAG, "$jsonForNotification")
+        Log.d(TAG, "$key")
+        Log.d(TAG, "$fq")
+        Log.d(TAG, "$dateBeginNotification")
     }
 }
