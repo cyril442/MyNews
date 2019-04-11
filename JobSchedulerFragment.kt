@@ -19,6 +19,8 @@ private lateinit var listener :JobSchedulerFragment.onJobSchedulerFragmentSelect
 
 class JobSchedulerFragment : Fragment() {
 
+  //  internal lateinit var btnSwitch : Switch
+
     companion object {
         fun newInstance() = JobSchedulerFragment()
     }
@@ -32,6 +34,23 @@ class JobSchedulerFragment : Fragment() {
         return view
 
     }
+
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//
+//        btnSwitch = view.findViewById(R.id.btnSwitch)
+//
+//        btnSwitch.setOnClickListener{
+//
+//            if (btnSwitch.isChecked) {
+//                Toast.makeText(activity, "Switch Button is checked", Toast.LENGTH_SHORT).show()
+//            } else {
+//                Toast.makeText(activity, "Switch Button is Unchecked", Toast.LENGTH_SHORT).show()
+//            }
+//
+//        }
+//
+//        super.onViewCreated(view, savedInstanceState)
+//    }
 
     interface onJobSchedulerFragmentSelected {
         fun onJobSchedulerFragmentSelected (jobSchedulerFragment: JobSchedulerFragment)
