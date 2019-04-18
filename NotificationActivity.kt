@@ -1,6 +1,9 @@
 package com.example.mynews
 
 import android.annotation.TargetApi
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
@@ -19,6 +22,8 @@ import kotlinx.android.synthetic.main.activity_search.*
 import kotlinx.android.synthetic.main.fragment_check_box.*
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -27,6 +32,14 @@ import java.util.*
 
 class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGroup.OnCheckedChangeListener,
     JobSchedulerFragment.onJobSchedulerFragmentSelected {
+
+
+    // NOTIFICTATION FOR TESTTING
+    lateinit var notificationManager : NotificationManager
+    lateinit var notificationChannel : NotificationChannel
+    lateinit var builder : Notification.Builder
+    private val channelID = "com.example.mynews"
+    private val description = "test de Notification"
 
     internal lateinit var btnSwitch: Switch
     val JOB_ID = 123
@@ -38,6 +51,10 @@ class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGro
     lateinit var sportsNot : String
     lateinit var entrepreneursNot : String
     lateinit var travelNot : String
+    lateinit var newJsonForNotification : String
+
+
+
 
     override fun onClick(v: View?) {
         Toast.makeText(this, "onClick has been clicked", Toast.LENGTH_SHORT).show()
@@ -63,8 +80,9 @@ class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGro
 
             if (btnSwitch.isChecked) {
                 Toast.makeText(this, "Switch Button is checked", Toast.LENGTH_SHORT).show()
-                collectDatasForNotifications()
+              // datasForJsonNotification()
                 scheduleJob()
+
                 //
             } else {
                 Toast.makeText(this, "Switch Button is Unchecked", Toast.LENGTH_SHORT).show()
@@ -109,7 +127,7 @@ class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGro
     }
 
 
-    private fun collectDatasForNotifications() {
+     fun datasForJsonNotification() : String {
 
         val key : String = "92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW"
 
@@ -150,35 +168,50 @@ class NotificationActivity : AppCompatActivity(), View.OnClickListener, RadioGro
             true -> travelNot = "&fq=Travel"
             false -> travelNot = "" }
 
-//        var currentDate = Date(System.currentTimeMillis()).toString()
-//        var formatter = SimpleDateFormat("yyyy-MM-dd")
-//        var formattedDateBegin = formatter.format(currentDate)
+
 
         // DATE BEGIN AND ENDING
+        // ---- TODAY ----
         var calendar = Calendar.getInstance()
+
         var input = DateFormat.getDateInstance(DateFormat.DATE_FIELD).format(calendar.getTime())
+
 
         var sdfIn = SimpleDateFormat("dd/MM/yyyy")
         var sdfOut = SimpleDateFormat("yyyyMMdd")
 
         var date = sdfIn.parse(input)
-        var dateBeginNotification = sdfOut.format(date)
 
-     //   var parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-      //  var formatter = SimpleDateFormat("yyyyMMdd")
-       // var output = formatter.format(parser.parse(currentDateFormated))
+        var dateEndNotification = sdfOut.format(date)
 
-//        var today = LocalDateTime.now()
-//        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd")
-//        val formattedDateBegin = today.format(formatter)
+        // DATE BEGIN AND ENDING
+        // ---- YESTERDAY ----
 
+        val mydate = Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24)
+        val dateFormat = SimpleDateFormat("yyyyMMdd")
+        val dateBeginNotification = dateFormat.format(mydate)
+
+
+        // String with checked element
         val fq = "$artsNot$politicsNot$businessNot$sportsNot$entrepreneursNot$travelNot".trim()
 
-        var jsonForNotification = "https://api.nytimes.com/svc/search/v2/articlesearch.json?begin_date=$dateBeginNotification&end_date=20190410&facet_fields=news_desk&facet_filter=true$fq&q=$queryNotification&sort=relevance&api-key=$key"
+        val jsonForNotification = "https://api.nytimes.com/svc/search/v2/articlesearch.json?begin_date=$dateBeginNotification&end_date=$dateEndNotification&facet_fields=news_desk&facet_filter=true$fq&q=$queryNotification&sort=relevance&api-key=$key"
 
         Log.d(TAG, "$jsonForNotification")
         Log.d(TAG, "$key")
         Log.d(TAG, "$fq")
-        Log.d(TAG, "$dateBeginNotification")
+        Log.d(TAG, " date yesterday : $dateBeginNotification")
+        Log.d(TAG, "calendar $calendar")
+        Log.d(TAG, " date today :$dateEndNotification")
+
+
+
+         return jsonForNotification
     }
+//
+//    fun getJSONForNotification () : String {
+//        var newJsonForNotification: String = datasForJsonNotification()
+//        Log.d(TAG, " date today :$newJsonForNotification")
+//     return newJsonForNotification
+//    }
 }
