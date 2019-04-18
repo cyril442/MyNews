@@ -1,7 +1,12 @@
 package com.example.mynews
 
 import android.annotation.SuppressLint
+import android.app.*
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -24,13 +29,20 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity()
-  //  , View.OnClickListener
-{
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+
+
+    // NOTIFICTATION FOR TESTTING
+    lateinit var notificationManager : NotificationManager
+    lateinit var notificationChannel : NotificationChannel
+    lateinit var builder : Notification.Builder
+    private val channelID = "com.example.mynews"
+    private val description = "test de Notification"
 
 
 //        //9) to Bind the Adapter to the RecyclerView and Main Activity
-//        lateinit var datasFromNyt : MutableList<DataFromNyt>
+//        lateinit var topStoriesScience : MutableList<DataFromNyt>
 //        //11) Set the adapter
 //        lateinit var newsAdapter : ItemNewsAdapter
 
@@ -41,26 +53,6 @@ class MainActivity : AppCompatActivity()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-
-
-//
-////        //10) Initialize the DatasfromNyt into the onCreate
-//        datasFromNyt = mutableListOf<DataFromNyt>()
-//        // ICI deux test en local:
-//        datasFromNyt.add(DataFromNyt("Il est libre Max!", "Monde", "France", "28 juin 2019", "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html", "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg", "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."))
-//        datasFromNyt.add(DataFromNyt("C'est sur", "europe", "Serbie", "12 mars 2019", "https://www.nytimes.com/2019/03/06/business/bank-regulation.html", "https://static01.nyt.com/images/2019/03/07/business/06dc-crisis1/06dc-crisis1-thumbStandard.jpg", "The Federal Reserve said that it would no longer give banks a passing or failing grade on a portion of the annual stress tests used to ensure a bank had sufficient resources to lend during an economic downturn."))
-//
-////        //12) Initialize newsAdapter onto the onCreate
-//        newsAdapter = ItemNewsAdapter(datasFromNyt, this)
-//
-////        //14) Collect the Recycler View from the Layout
-//        val recyclerView = findViewById<RecyclerView>(R.id.top_stories_recycler_view)
-//            recyclerView.layoutManager = LinearLayoutManager(this)
-//           // recyclerView.setHasFixedSize(true)
-//            recyclerView.adapter = newsAdapter
-//
 
 
         // 6) setting Up of the page Adapter in the Oncreate
@@ -108,7 +100,9 @@ class MainActivity : AppCompatActivity()
                 return true
             }
             R.id.action_about -> {
+                notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 Toast.makeText(this, "About Button Clicked", Toast.LENGTH_SHORT).show()
+                laNotification()
                 return true
             }
             R.id.action_help -> {
@@ -118,6 +112,38 @@ class MainActivity : AppCompatActivity()
             // In else, we return the default value
             else -> return super.onOptionsItemSelected(item)
         }
+
+    }
+
+    private fun laNotification() {
+
+        val intent = Intent(this, LauncherActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationChannel = NotificationChannel(channelID, description, NotificationManager.IMPORTANCE_HIGH)
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.GREEN
+            notificationChannel.enableVibration(true)
+            notificationManager.createNotificationChannel(notificationChannel)
+
+            builder = Notification.Builder(this, channelID)
+                .setContentTitle("Content Title")
+                .setContentText("test Notification")
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setLargeIcon(BitmapFactory.decodeResource(this.resources,R.mipmap.ic_launcher))
+                .setContentIntent(pendingIntent)
+
+        } else {
+            builder = Notification.Builder(this)
+                .setContentTitle("Content Title")
+                .setContentText("test Notification")
+                .setSmallIcon(R.mipmap.ic_launcher_round)
+                .setLargeIcon(BitmapFactory.decodeResource(this.resources,R.mipmap.ic_launcher))
+                .setContentIntent(pendingIntent)
+        }
+        notificationManager.notify(1234, builder.build())
+
 
     }
 //    // 13) Implementation of the OnClick on the item
@@ -131,4 +157,8 @@ class MainActivity : AppCompatActivity()
 //
 //        }
 //    }
+
+    override fun onClick(v: View?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

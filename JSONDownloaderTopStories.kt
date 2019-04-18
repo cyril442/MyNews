@@ -1,4 +1,4 @@
-package com.example.mynews.Fragments
+package com.example.mynews
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -14,7 +14,7 @@ import java.net.MalformedURLException
 import java.net.URL
 
 @Suppress ("DEPRECATION")
-class JSONDownloader(private var c: Context, private var jsonURL: String, private var recyclerView: RecyclerView) : AsyncTask<Void, Void, String>() {
+class JSONDownloaderTopStories(private var c: Context, private var jsonURL: String, private var recyclerView: RecyclerView) : AsyncTask<Void, Void, String>() {
 
 
     private lateinit var pd : ProgressDialog
@@ -129,7 +129,7 @@ class JSONDownloader(private var c: Context, private var jsonURL: String, privat
         else{
             // PARSE
             Toast.makeText(c, "Network Connection and Download Succesfull. Now Attempting to Parse", Toast.LENGTH_LONG).show()
-            JSONParserTopStories(c, jsonData, recyclerView).execute()
+            JSONParserTopStories(c, jsonData).execute()
         }
 
     }

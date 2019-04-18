@@ -1,9 +1,7 @@
 package com.example.mynews.Fragments
 
 
-import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,145 +9,285 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynews.App
-import com.example.mynews.ItemNewsAdapter
-import com.example.mynews.NewYorkTimesApi.Multimedia
-import com.example.mynews.NewYorkTimesApi.NytWrapper
-import com.example.mynews.NewYorkTimesApi.mapNytDataToDataFromNyt
-import com.example.mynews.NewYorkTimesApi.mapNytDataToDataFromNytSearch
-
-import com.example.mynews.R
-import com.google.gson.GsonBuilder
-
-import kotlinx.android.synthetic.*
-import kotlinx.android.synthetic.main.fragment_tab1.*
-import kotlinx.android.synthetic.main.item_news.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.util.*
-import kotlin.concurrent.thread
-import kotlin.properties.ObservableProperty
+import com.example.mynews.*
 
 
 class Tab1Fragment : Fragment(), View.OnClickListener {
 
-    var jsonURL = "https://api.nytimes.com/svc/topstories/v2/science.json?api-key=92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW"
 
 
     companion object {
-        fun newInstance(): Tab1Fragment {
-            return Tab1Fragment()
+
+        fun  newInstance(): Tab1Fragment {
+            return  Tab1Fragment()
         }
     }
+    var jsonURL = "https://api.nytimes.com/svc/topstories/v2/science.json?api-key=92Nbf4KeZSKhJXGm5QA3eTgNJjFW61gW"
 
-    //9) to Bind the Adapter to the RecyclerView and Main Activity
-  //  lateinit var datasFromNyt: MutableList<DataFromNyt>
-    //11) Set the adapter
-   // lateinit var newsAdapter: ItemNewsAdapter
+    var countries = arrayOf(
+        "Afghanistan",
+        "Albania",
+        "Algeria",
+        "American Samoa",
+        "Andorra",
+        "Angola",
+        "Anguilla",
+        "Antarctica",
+        "Antigua and Barbuda",
+        "Argentina",
+        "Armenia",
+        "Aruba",
+        "Australia",
+        "Austria",
+        "Azerbaijan",
+        "Bahamas",
+        "Bahrain",
+        "Bangladesh",
+        "Barbados",
+        "Belarus",
+        "Belgium",
+        "Belize",
+        "Benin",
+        "Bermuda",
+        "Bhutan",
+        "Bolivia",
+        "Bosnia and Herzegowina",
+        "Botswana",
+        "Bouvet Island",
+        "Brazil",
+        "British Indian Ocean Territory",
+        "Brunei Darussalam",
+        "Bulgaria",
+        "Burkina Faso",
+        "Burundi",
+        "Cambodia",
+        "Cameroon",
+        "Canada",
+        "Cape Verde",
+        "Cayman Islands",
+        "Central African Republic",
+        "Chad",
+        "Chile",
+        "China",
+        "Christmas Island",
+        "Cocos (Keeling) Islands",
+        "Colombia",
+        "Comoros",
+        "Congo",
+        "Congo, the Democratic Republic of the",
+        "Cook Islands",
+        "Costa Rica",
+        "Cote d'Ivoire",
+        "Croatia (Hrvatska)",
+        "Cuba",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Djibouti",
+        "Dominica",
+        "Dominican Republic",
+        "East Timor",
+        "Ecuador",
+        "Egypt",
+        "El Salvador",
+        "Equatorial Guinea",
+        "Eritrea",
+        "Estonia",
+        "Ethiopia",
+        "Falkland Islands (Malvinas)",
+        "Faroe Islands",
+        "Fiji",
+        "Finland",
+        "France",
+        "France Metropolitan",
+        "French Guiana",
+        "French Polynesia",
+        "French Southern Territories",
+        "Gabon",
+        "Gambia",
+        "Georgia",
+        "Germany",
+        "Ghana",
+        "Gibraltar",
+        "Greece",
+        "Greenland",
+        "Grenada",
+        "Guadeloupe",
+        "Guam",
+        "Guatemala",
+        "Guinea",
+        "Guinea-Bissau",
+        "Guyana",
+        "Haiti",
+        "Heard and Mc Donald Islands",
+        "Holy See (Vatican City State)",
+        "Honduras",
+        "Hong Kong",
+        "Hungary",
+        "Iceland",
+        "India",
+        "Indonesia",
+        "Iran (Islamic Republic of)",
+        "Iraq",
+        "Ireland",
+        "Israel",
+        "Italy",
+        "Jamaica",
+        "Japan",
+        "Jordan",
+        "Kazakhstan",
+        "Kenya",
+        "Kiribati",
+        "Korea, Democratic People's Republic of",
+        "Korea, Republic of",
+        "Kuwait",
+        "Kyrgyzstan",
+        "Lao, People's Democratic Republic",
+        "Latvia",
+        "Lebanon",
+        "Lesotho",
+        "Liberia",
+        "Libyan Arab Jamahiriya",
+        "Liechtenstein",
+        "Lithuania",
+        "Luxembourg",
+        "Macau",
+        "Macedonia, The Former Yugoslav Republic of",
+        "Madagascar",
+        "Malawi",
+        "Malaysia",
+        "Maldives",
+        "Mali",
+        "Malta",
+        "Marshall Islands",
+        "Martinique",
+        "Mauritania",
+        "Mauritius",
+        "Mayotte",
+        "Mexico",
+        "Micronesia, Federated States of",
+        "Moldova, Republic of",
+        "Monaco",
+        "Mongolia",
+        "Montserrat",
+        "Morocco",
+        "Mozambique",
+        "Myanmar",
+        "Namibia",
+        "Nauru",
+        "Nepal",
+        "Netherlands",
+        "Netherlands Antilles",
+        "New Caledonia",
+        "New Zealand",
+        "Nicaragua",
+        "Niger",
+        "Nigeria",
+        "Niue",
+        "Norfolk Island",
+        "Northern Mariana Islands",
+        "Norway",
+        "Oman",
+        "Pakistan",
+        "Palau",
+        "Panama",
+        "Papua New Guinea",
+        "Paraguay",
+        "Peru",
+        "Philippines",
+        "Pitcairn",
+        "Poland",
+        "Portugal",
+        "Puerto Rico",
+        "Qatar",
+        "Reunion",
+        "Romania",
+        "Russian Federation",
+        "Rwanda",
+        "Saint Kitts and Nevis",
+        "Saint Lucia",
+        "Saint Vincent and the Grenadines",
+        "Samoa",
+        "San Marino",
+        "Sao Tome and Principe",
+        "Saudi Arabia",
+        "Serbia",
+        "Seychelles",
+        "Sierra Leone",
+        "Singapore",
+        "Slovakia (Slovak Republic)",
+        "Slovenia",
+        "Solomon Islands",
+        "Somalia",
+        "South Africa",
+        "South Georgia and the South Sandwich Islands",
+        "Spain",
+        "Sri Lanka",
+        "St. Helena",
+        "St. Pierre and Miquelon",
+        "Sudan",
+        "Suriname",
+        "Svalbard and Jan Mayen Islands",
+        "Swaziland",
+        "Sweden",
+        "Switzerland",
+        "Syrian Arab Republic",
+        "Taiwan, Province of China",
+        "Tajikistan",
+        "Tanzania, United Republic of",
+        "Thailand",
+        "Togo",
+        "Tokelau",
+        "Tonga",
+        "Trinidad and Tobago",
+        "Tunisia",
+        "Turkey",
+        "Turkmenistan",
+        "Turks and Caicos Islands",
+        "Tuvalu",
+        "Uganda",
+        "Ukraine",
+        "United Arab Emirates",
+        "United Kingdom",
+        "United States",
+        "United States Minor Outlying Islands",
+        "Uruguay",
+        "Uzbekistan",
+        "Vanuatu",
+        "Venezuela",
+        "Vietnam",
+        "Virgin Islands (British)",
+        "Virgin Islands (U.S.)",
+        "Wallis and Futuna Islands",
+        "Western Sahara",
+        "Yemen",
+        "Yugoslavia",
+        "Zambia",
+        "Zimbabwe"
+    )
 
-     lateinit var recyclerView: RecyclerView
+   lateinit var topStoriesScience = JSONParserTopStories.TopStoriesScience
 
-
-
+    val adapter = ItemNewsAdapter(topStoriesScience, this)
+    lateinit var recyclerView: RecyclerView
 
     private val TAG = Tab1Fragment::class.java.simpleName
-
-
-
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(com.example.mynews.R.layout.fragment_tab1, container, false)
-
-
-     //  recyclerView = getView() as RecyclerView
-        recyclerView = view.findViewById(R.id.top_stories_recycler_view) as RecyclerView
-
- //       JSONDownloader(context!!, jsonURL, recyclerView).execute()
-
-//        Log.i("chatouille", "Start Entered in createdView")
-//        if (datasFromNyt.isNullOrEmpty()){
-//                datasFromNyt = workload()
-        //    Thread.sleep(2000)
-
-//        }
-
-
-
-          //Thread.sleep(2000)
-       // datasFromNyt  = workload()
- //       Log.i("chatouille","Stop")
+        val view = inflater.inflate(R.layout.fragment_tab1, container, false)
 
 
 
 
 
-    //10) Initialize the DatasfromNyt into the onCreateView
-  //      datasFromNyt = mutableListOf<DataFromNyt>()
-
-
-
-
-////        // ICI trois test en local:
-//            datasFromNyt.add(
-//                DataFromNyt(
-//                    "Il est libre Max!",
-//                    "Monde ",
-//                    " > France",
-//                    "28 juin 2019",
-//                    "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html",
-//                    "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg",
-//                    "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."
-//                )
-//            )
-//            datasFromNyt.add(
-//                DataFromNyt(
-//                    "C'est sur",
-//                    "europe",
-//                    "brexit",
-//                    "12 mars 2019",
-//                    "https://www.nytimes.com/2019/03/06/business/bank-regulation.html",
-//                    "https://static01.nyt.com/images/2019/03/07/business/06dc-crisis1/06dc-crisis1-thumbStandard.jpg",
-//                    "The Federal Reserve said that it would no longer give banks a passing or failing grade on a portion of the annual stress tests used to ensure a bank had sufficient resources to lend during an economic downturn."
-//                )
-//            )
-//            datasFromNyt.add(
-//                DataFromNyt(
-//                    "Il est CANAILLOUX!",
-//                    "France ",
-//                    " > Bearn",
-//                    "28 juin 2019",
-//                    "https://www.nytimes.com/2019/03/06/us/politics/us-trade-deficit.html",
-//                    "https://static01.nyt.com/images/2019/03/06/reader-center/06dc-deficit-hp/06dc-deficit-hp-thumbStandard.jpg",
-//                    "The United States trade deficit in goods reached $891.3 billion in 2018 — the highest it’s ever been."
-//                )
-//
-//            )
-
-
-
-
-
-
-//        //12) Initialize newsAdapter into the onCreate
-//        newsAdapter = ItemNewsAdapter(datasFromNyt, this)
-
-
-        //14) Collect the Recycler View from the Layout
-//        recyclerView = view.findViewById(com.example.mynews.R.id.top_stories_recycler_view)
-//        recyclerView.layoutManager = LinearLayoutManager(activity)
-//        recyclerView.setHasFixedSize(false)
-//        recyclerView.adapter = newsAdapter
-
-
+        recyclerView = getView() as RecyclerView
+        val recyclerView = view.findViewById(R.id.top_stories_recycler_view) as RecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = adapter
 
 
         // Inflate the layout for this fragment
@@ -158,113 +296,17 @@ class Tab1Fragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-
-
-
     }
-
-
-
 
 
     override fun onClick(view: View) {
-        Toast.makeText(activity, "clické sur item + {${tag}}", Toast.LENGTH_SHORT).show()
+        if (view.tag != null) {
+            val index = view.tag as Int
+            val country = countries[index]
+            Toast.makeText(activity, " le pays sélectionné est ${country}", Toast.LENGTH_SHORT).show()
+        }
     }
-//
-//    private fun workload(): MutableList<DataFromNyt> {
-//
-//
-//
-//
-//        val call = App.nytService.getNytDataTopStories()
-//
-//        call.enqueue(object : Callback<NytWrapper> {
-//
-//
-//            //HOW TO WAIT TO GET RESPONSE OR FAILURE?
-//
-//
-//
-//
-//
-//
-//
-//            override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
-//
-//                //  Log.i(TAG, "NYT response : ${response.body()}")
-//                response.body()?.let {
-//
-//                    val dataFromNyt = mapNytDataToDataFromNyt(it)
-//                    Log.i(TAG, "DataFromNyt response : $dataFromNyt")
-//
-//                    datasFromNyt = mutableListOf(dataFromNyt)
-//                    Log.i(TAG, "DatasFromNytFromCoroutine : $datasFromNyt")
-//
-//
-//
-//                }
-//
-//
-//            }
-//
-//            override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
-//                Log.e(TAG, "Nyt response : Could not load ! ", t)
-//                Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
-//            }
-//
-//
-//        })
-//
-//
-//
-//
-//
-//        return datasFromNyt
-//    }
-
-//    fun getNews() : ObservableProperty<List<DataFromNyt>> {
-//        return Observable.create {
-//                subscriber ->
-//
-//
-//            val call = App.nytService.getNytDataTopStories()
-//            call.enqueue(object : Callback<NytWrapper> {
-//
-//
-//                //HOW TO WAIT TO GET RESPONSE OR FAILURE?
-//
-//
-//                override fun onResponse(call: Call<NytWrapper>, response: Response<NytWrapper>) {
-//
-//                    //  Log.i(TAG, "NYT response : ${response.body()}")
-//                    response.body()?.let {
-//
-//                        val dataFromNyt = mapNytDataToDataFromNyt(it)
-//                        Log.i(TAG, "DataFromNyt response : $dataFromNyt")
-//
-//                        datasFromNyt = mutableListOf(dataFromNyt)
-//                        Log.i(TAG, "DatasFromNytFromCoroutine : $datasFromNyt")
-//
-//                        subscriber.onNext(datasFromNyt)
-//
-//
-//                    }
-//
-//
-//                }
-//
-//                override fun onFailure(call: Call<NytWrapper>, t: Throwable) {
-//                    Log.e(TAG, "Nyt response : Could not load ! ", t)
-//                    Toast.makeText(activity, "could not load Nyt Datas", Toast.LENGTH_SHORT).show()
-//                    subscriber.onError()
-//                }
-//
-//
-//            })
-//
-//        }
-
-    }
+}
 
 
 

@@ -7,10 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynews.Fragments.DataFromNyt
+import kotlinx.android.synthetic.main.item_news.view.*
 
 
-class ItemNewsAdapter (val datasFromNyt : List<DataFromNyt>, val itemClickListener : View.OnClickListener )
+class ItemNewsAdapter(val topStoriesScience: JSONParserTopStories.TopStoriesScience, val itemClickListener: View.OnClickListener )
     : RecyclerView.Adapter<ItemNewsAdapter.ViewHolder>()  {
 
     class ViewHolder (itemView: View) : RecyclerView.ViewHolder (itemView) {
@@ -30,18 +30,18 @@ class ItemNewsAdapter (val datasFromNyt : List<DataFromNyt>, val itemClickListen
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val dataFromNyt = datasFromNyt[position]
+        val topStoriesScience  = topStoriesScience[position]
         holder.cardView.setOnClickListener(itemClickListener)
         holder.cardView.tag = position
-        holder.sectionView.text = dataFromNyt.section
-        holder.subsectionView.text = dataFromNyt.subsection
-        holder.titleView.text = dataFromNyt.title
-        holder.dateView.text = dataFromNyt.date
-       // holder.iconView. = dataFromNyt.iconUrl
+        holder.sectionView.text = topStoriesScience.section
+        holder.subsectionView.text = topStoriesScience.subsection
+        holder.titleView.text = topStoriesScience.title
+        holder.dateView.text = topStoriesScience.date
+        holder.iconView.setImageResource(R.mipmap.ic_launcher_round)
     }
 
     override fun getItemCount(): Int {
-        return datasFromNyt.size
+        return topStoriesScience.size
 
     }
 
